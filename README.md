@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-It can be launched in [https://next-social-media-demo-k6yv42brp-arwens-projects-b76fac7c.vercel.app/](https://next-social-media-demo-k6yv42brp-arwens-projects-b76fac7c.vercel.app/)
+It can be launched in [https://next-social-media-demo.vercel.app](https://next-social-media-demo.vercel.app)
 
 ## Getting Started
 
