@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import TrendsSidebar from "@/components/TrendsSidebar";
 import UserAvatar from "@/components/UserAvatar";
 import prisma from "@/lib/prisma";
 import { FollowerInfo, getUserDataSelect, UserData } from "@/types/post";
@@ -55,18 +54,15 @@ export default async function Page({
   const user = await getUser(username, loggedInUserId);
 
   return (
-    <main className="flex w-full min-w-0 gap-5">
-      <div className="w-full min-w-0 space-y-5">
-        <UserProfile user={user} loggedInUserId={loggedInUserId} />
-        <div className="rounded-2xl bg-card p-5 shadow-sm">
-          <h2 className="text-center text-2xl font-bold">
-            {user.displayName}&apos;s posts
-          </h2>
-        </div>
-        <UserPosts userId={user.id} />
+    <div className="w-full min-w-0 space-y-5">
+      <UserProfile user={user} loggedInUserId={loggedInUserId} />
+      <div className="rounded-2xl bg-card p-5 shadow-sm">
+        <h2 className="text-center text-2xl font-bold">
+          {user.displayName}&apos;s posts
+        </h2>
       </div>
-      <TrendsSidebar className="sticky top-[5.25rem] hidden h-fit w-72 flex-none md:block lg:w-80" />
-    </main>
+      <UserPosts userId={user.id} />
+    </div>
   );
 }
 
