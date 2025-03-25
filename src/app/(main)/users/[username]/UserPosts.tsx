@@ -7,7 +7,6 @@ import { PostsPageSimple } from "@/types/post";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
-import { ZodNull } from "zod";
 
 interface UserPostsProps {
   userId: string;
@@ -48,7 +47,7 @@ export default function UserPosts({ userId }: UserPostsProps) {
   if (status === "success" && !posts.length && !hasNextPage) {
     return (
       <p className="text-center text-muted-foreground">
-        The user hasn't posted anything yet.
+        The user hasn&apos;t posted anything yet.
       </p>
     );
   }

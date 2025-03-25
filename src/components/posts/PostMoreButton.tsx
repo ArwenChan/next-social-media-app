@@ -1,4 +1,3 @@
-import { PostData } from "@/types/post";
 import { MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";

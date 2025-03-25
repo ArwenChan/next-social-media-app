@@ -4,7 +4,7 @@ import { FollowerInfo } from "@/types/post";
 
 export async function GET(
   req: Request,
-  { params }: { params: { userId: string } },
+  { params }: { params: Promise<{ userId: string }> },
 ) {
   try {
     const { userId } = await params;
@@ -82,7 +82,7 @@ export async function POST(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { userId: string } },
+  { params }: { params: Promise<{ userId: string }> },
 ) {
   try {
     const { userId } = await params;

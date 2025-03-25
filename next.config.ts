@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
+    // The authInterrupts configuration option allows you to use forbidden and unauthorized APIs in your application.
     authInterrupts: true,
     // by default, router cache only cache layouts and loadings, but not pages,
     // with this it will also cache pages
