@@ -31,13 +31,16 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
+      const url = `https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${file.key}`;
       await prisma.user.update({
         where: { id: metadata.userId },
-        data: { image: file.url },
+        data: {
+          image: url,
+        },
       });
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { avatarUrl: file.url };
+      return { avatarUrl: url };
     }),
 } satisfies FileRouter;
 

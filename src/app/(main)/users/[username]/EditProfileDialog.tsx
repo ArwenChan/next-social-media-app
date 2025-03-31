@@ -85,6 +85,7 @@ export default function EditProfileDialog({
         <div className="space-y-1.5">
           <Label>Avatar</Label>
           <AvatarInput
+            disabled={mutation.isPending}
             src={
               croppedAvatar
                 ? URL.createObjectURL(croppedAvatar)
@@ -102,7 +103,11 @@ export default function EditProfileDialog({
                 <FormItem>
                   <FormLabel>Display name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your display name" {...field} />
+                    <Input
+                      disabled={mutation.isPending}
+                      placeholder="Your display name"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -116,6 +121,7 @@ export default function EditProfileDialog({
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
                     <Textarea
+                      disabled={mutation.isPending}
                       placeholder="Tell us a little bit about yourself"
                       className="resize-none"
                       {...field}
@@ -140,9 +146,10 @@ export default function EditProfileDialog({
 interface AvatarInputProps {
   src: string | StaticImageData;
   onImageCropped: (blob: Blob | null) => void;
+  disabled: boolean;
 }
 
-function AvatarInput({ src, onImageCropped }: AvatarInputProps) {
+function AvatarInput({ src, onImageCropped, disabled }: AvatarInputProps) {
   const [imageToCrop, setImageToCrop] = useState<File>();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -167,12 +174,15 @@ function AvatarInput({ src, onImageCropped }: AvatarInputProps) {
       <input
         type="file"
         accept="image/*"
+        disabled={disabled}
         onChange={(e) => onImageSelected(e.target.files?.[0])}
         ref={fileInputRef}
         className="sr-only hidden"
       />
       <button
+        title="Change avatar"
         type="button"
+        disabled={disabled}
         onClick={() => fileInputRef.current?.click()}
         className="group relative block"
       >

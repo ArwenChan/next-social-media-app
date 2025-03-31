@@ -47,7 +47,7 @@ export default function CropImageDialog({
           stencilProps={{
             aspectRatio: cropAspectRatio,
           }}
-          className="h-[600px]"
+          className="h-[500px]"
         />
         <DialogFooter>
           <Button variant="secondary" onClick={onClose}>

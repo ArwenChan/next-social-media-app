@@ -42,11 +42,11 @@ export function useUpdateProfileMutation() {
     },
     onSuccess: async ([updatedUser, uploadResult]) => {
       if (uploadError) {
+        // show error but still go on update other parts
         toast({
           variant: "destructive",
           description: uploadError.message,
         });
-        return;
       }
       const newAvatarUrl = uploadResult?.[0].serverData.avatarUrl;
 
