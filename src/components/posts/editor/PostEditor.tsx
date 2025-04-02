@@ -9,11 +9,13 @@ import UserAvatar from "@/components/UserAvatar";
 import "./style.css";
 import LoadingButton from "@/components/LoadingButton";
 import { useSubmitPostMutation } from "@/components/posts/mutations";
-import useMediaUpload, { Attachment } from "./useMediaUpload";
+import useMediaUpload from "./useMediaUpload";
 import { Button } from "@/components/ui/button";
 import { ImageIcon, Loader2, X } from "lucide-react";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
+import { Attachment } from "@/types/post";
+import { useDropzone } from "@uploadthing/react";
 
 export default function PostEditor() {
   const { data: session } = useSession();
@@ -27,6 +29,10 @@ export default function PostEditor() {
     reset: resetMediaUpload,
   } = useMediaUpload();
 
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: startUpload,
+  });
+  const { onClick, ...rootProps } = getRootProps();
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -56,6 +62,11 @@ export default function PostEditor() {
     );
   }
 
+  function onPaste(e: React.ClipboardEvent) {
+    const files = Array.from(e.clipboardData?.files ?? []);
+    startUpload(files);
+  }
+
   return (
     <div className="flex flex-col gap-5 rounded-2xl bg-card p-5 shadow-sm">
       <div className="flex gap-5">
@@ -63,10 +74,17 @@ export default function PostEditor() {
           avatarUrl={session!.user?.image}
           className="hidden sm:inline"
         />
-        <EditorContent
-          editor={editor}
-          className="max-h-[20rem] w-full overflow-y-auto rounded-2xl bg-background px-5 py-3"
-        />
+        <div {...rootProps} className="w-full">
+          <EditorContent
+            editor={editor}
+            className={cn(
+              "max-h-[20rem] w-full overflow-y-auto rounded-2xl bg-background px-5 py-3",
+              isDragActive && "outline-dashed",
+            )}
+            onPaste={onPaste}
+          />
+          <input {...getInputProps()} />
+        </div>
       </div>
       {!!attachments.length && (
         <AttachmentPreviews
