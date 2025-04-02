@@ -1,12 +1,7 @@
 import { useToast } from "@/hooks/use-toast";
 import { useUploadThing } from "@/lib/uploadthing";
+import { Attachment } from "@/types/post";
 import { useState } from "react";
-
-export interface Attachment {
-  file: File;
-  mediaId?: string;
-  isUploading: boolean;
-}
 
 export default function useMediaUpload() {
   const { toast } = useToast();
