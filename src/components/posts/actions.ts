@@ -4,7 +4,6 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { createPostSchema } from "@/lib/validation";
 import { getPostDataInclude, getPostDataIncludeSimple } from "@/types/post";
-import { connect } from "http2";
 import { redirect } from "next/navigation";
 
 export async function submitPost(input: {

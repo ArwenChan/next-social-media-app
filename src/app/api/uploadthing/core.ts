@@ -58,7 +58,7 @@ export const ourFileRouter = {
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: session!.user.id };
     })
-    .onUploadComplete(async ({ metadata, file }) => {
+    .onUploadComplete(async ({ file }) => {
       // This code RUNS ON YOUR SERVER after upload
       const url = `https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${file.key}`;
       const media = await prisma.media.create({
