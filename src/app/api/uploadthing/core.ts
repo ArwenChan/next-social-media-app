@@ -1,14 +1,14 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
+import { UploadThingError, UTApi } from "uploadthing/server";
 
 const f = createUploadthing();
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  imageUploader: f({
+  avatar: f({
     image: {
       /**
        * For full list of options and defaults, see the File Route API reference
@@ -27,13 +27,18 @@ export const ourFileRouter = {
           "You must be logged in to upload a profile picture",
         );
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: session!.user.id };
+      return { user: session!.user };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
+      const oldAvatar = metadata.user.image;
+      if (oldAvatar) {
+        const key = oldAvatar.split("/").pop() as string;
+        await new UTApi().deleteFiles(key);
+      }
       const url = `https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${file.key}`;
       await prisma.user.update({
-        where: { id: metadata.userId },
+        where: { id: metadata.user.id },
         data: {
           image: url,
         },
@@ -41,6 +46,29 @@ export const ourFileRouter = {
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       return { avatarUrl: url };
+    }),
+  attachment: f({
+    image: { maxFileSize: "4MB", maxFileCount: 5 },
+    video: { maxFileSize: "64MB", maxFileCount: 5 },
+  })
+    .middleware(async () => {
+      const session = await auth();
+      if (!session?.user)
+        throw new UploadThingError("You must be logged in to upload things.");
+      // Whatever is returned here is accessible in onUploadComplete as `metadata`
+      return { userId: session!.user.id };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      // This code RUNS ON YOUR SERVER after upload
+      const url = `https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${file.key}`;
+      const media = await prisma.media.create({
+        data: {
+          url,
+          type: file.type.startsWith("image") ? "IMAGE" : "VIDEO",
+        },
+      });
+      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
+      return { mediaId: media.id };
     }),
 } satisfies FileRouter;
 

@@ -21,7 +21,7 @@ export function useUpdateProfileMutation() {
   const queryClient = useQueryClient();
 
   const [uploadError, setUploadError] = useState<UploadThingError | null>(null);
-  const { startUpload: startAvatarUpload } = useUploadThing("imageUploader", {
+  const { startUpload: startAvatarUpload } = useUploadThing("avatar", {
     onUploadError: (e) => {
       setUploadError(e as UploadThingError);
     },

@@ -4,18 +4,25 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { createPostSchema } from "@/lib/validation";
 import { getPostDataInclude, getPostDataIncludeSimple } from "@/types/post";
+import { connect } from "http2";
 import { redirect } from "next/navigation";
 
-export async function submitPost(input: { content: string }) {
+export async function submitPost(input: {
+  content: string;
+  mediaIds: string[];
+}) {
   const session = await auth();
   if (!session) {
     redirect("/login");
   }
-  const { content } = createPostSchema.parse(input);
+  const { content, mediaIds } = createPostSchema.parse(input);
   const newPost = await prisma.post.create({
     data: {
       content,
       userId: session.user.id,
+      attachments: {
+        connect: mediaIds.map((id) => ({ id })),
+      },
     },
     include: getPostDataInclude(session.user.id),
   });
